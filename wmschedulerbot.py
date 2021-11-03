@@ -143,13 +143,19 @@ async def check(ctx, args):
         "1": "1",
         "2": "2",
     }
-    params = {"from_deadline": dt.now().strftime("%Y%m%d")}
+    usernames = {
+        "SEED": "seed",
+        "I.TK": "itk",
+        "Liberal": "liberal",
+    }
+    params = {
+        "from_deadline": dt.now().strftime("%Y%m%d"),
+        "username": usernames[ctx.author.name],
+    }
     errors = []
     if len(args) <= 2:
         errors.append({"name": "引数エラー", "value": "引数が少なすぎます"})
-    else:
-        params["username"] = args[2]
-    for arg in args[3:]:
+    for arg in args[2:]:
         attrs = arg.split("=")
         if len(attrs) == 1:
             params["subject"] = attrs[0]
@@ -202,6 +208,7 @@ async def on_message(ctx):
     # /wsmであれば実行
     if args[0] == "/wms":
         await exec_command(ctx, args)
+    # await ctx.channel.send(ctx.author.name)
 
 
 # 実行
