@@ -10,73 +10,94 @@ client = discord.Client()
 
 # 文字列を空白区切りでリスト化
 def split_command(content):
-    args = content.replace('　', ' ').split(' ')
-    while '' in args:
-        args.remove('')
+    args = content.replace("　", " ").split(" ")
+    while "" in args:
+        args.remove("")
     return args
+
 
 def check_validation(params, errors):
     return errors
 
+
 def create_link(name, params):
-    link = f'https://waseda-moodle-scheduler.herokuapp.com/api/v1/{name}?'
+    link = f"https://waseda-moodle-scheduler.herokuapp.com/api/v1/{name}?"
     for key in params:
         link += f"{key}={params[key]}&"
     return link[:-1]
 
+
 async def show_event_information(ctx, link, params):
-    r = requests.get(link, headers={'Authorization': f"Basic {getenv('BASIC_AUTHORIZATION')}"})
-    str = ''
+    r = requests.get(
+        link, headers={"Authorization": f"Basic {getenv('BASIC_AUTHORIZATION')}"}
+    )
+    str = ""
     for key in params:
         str += f"{key}: {params[key]},"
     if r.status_code == 200:
         data = json.loads(r.text)
-        embed = discord.Embed(title='検索結果', description=str[:-1], color=0x00ff00)
+        embed = discord.Embed(title="検索結果", description=str[:-1], color=0x00FF00)
         for event in data:
-            embed.add_field(name=f"{event['title']}", value=f"{event['uid'][:-20]}, {event['subject']}, {event['begin_at']}", inline=False)
+            embed.add_field(
+                name=f"{event['title']}",
+                value=f"{event['uid'][:-20]}, {event['subject']}, {event['begin_at']}",
+                inline=False,
+            )
     else:
-        embed = discord.Embed(title='ERROR', description='Something is wrong', color=0xff0000)
+        embed = discord.Embed(
+            title="ERROR", description="Something is wrong", color=0xFF0000
+        )
     await ctx.channel.send(embed=embed)
 
+
 async def show(ctx, args):
-    parmit_commands = {'title': 'title', 'subject': 'subject', 'from': 'from_deadline', 'to': 'to_deadline', 'order': 'order', 'limit': 'limit'}
-    params = {'from_deadline': dt.now().strftime('%Y%m%d')}
+    parmit_commands = {
+        "title": "title",
+        "subject": "subject",
+        "from": "from_deadline",
+        "to": "to_deadline",
+        "order": "order",
+        "limit": "limit",
+    }
+    params = {"from_deadline": dt.now().strftime("%Y%m%d")}
     errors = []
     if len(args) <= 2:
-        errors.append({'name': "引数エラー", 'value': '引数が少なすぎます'})
+        errors.append({"name": "引数エラー", "value": "引数が少なすぎます"})
     for arg in args[2:]:
-        attrs = arg.split('=')
+        attrs = arg.split("=")
         if len(attrs) == 1:
-            params['subject'] = attrs[0]
+            params["subject"] = attrs[0]
         elif len(attrs) == 2:
             if attrs[0] in parmit_commands:
                 params[parmit_commands[attrs[0]]] = attrs[1]
             else:
-                errors.append({'name': "引数エラー", 'value': '属性名が不正です'})
+                errors.append({"name": "引数エラー", "value": "属性名が不正です"})
         else:
-            errors.append({'name': "引数エラー", 'value': '=が多すぎます'})
+            errors.append({"name": "引数エラー", "value": "=が多すぎます"})
     errors = check_validation(params, errors)
     if errors:
-        embed = discord.Embed(title='hoge', description='fuga', color=0xff0000)
+        embed = discord.Embed(title="hoge", description="fuga", color=0xFF0000)
         embed.title = "ERROR"
         embed.description = "Something is wrong"
-        embed.color = 0xff0000
+        embed.color = 0xFF0000
         for err in errors:
-            embed.add_field(name=err['name'], value=err['value'], inline=False)
+            embed.add_field(name=err["name"], value=err["value"], inline=False)
         await ctx.channel.send(embed=embed)
     else:
-        await show_event_information(ctx, create_link('events', params), params)
+        await show_event_information(ctx, create_link("events", params), params)
 
-            
+
 # コマンド処理
 async def exec_command(ctx, args):
-    if args[1] == 'show':
+    if args[1] == "show":
         await show(ctx, args)
+
 
 @client.event
 async def on_ready():
     # サーバー起動時に実行
-    print('サーバーを起動します。')
+    print("サーバーを起動します。")
+
 
 @client.event
 async def on_message(ctx):
@@ -86,8 +107,9 @@ async def on_message(ctx):
     # 文字列を空白区切りでリスト化
     args = split_command(ctx.content)
     # /wsmであれば実行
-    if args[0] == '/wms':
+    if args[0] == "/wms":
         await exec_command(ctx, args)
 
+
 # 実行
-client.run(getenv('DISCORD_BOT_TOKEN'))
+client.run(getenv("DISCORD_BOT_TOKEN"))
