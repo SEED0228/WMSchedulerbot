@@ -3,6 +3,7 @@ import requests
 import json
 from dotenv import load_dotenv
 from os import getenv
+from datetime import datetime as dt
 
 # オブジェクトを取得
 client = discord.Client()
@@ -39,7 +40,7 @@ async def show_event_information(ctx, link, params):
 
 async def show(ctx, args):
     parmit_commands = {'title': 'title', 'subject': 'subject', 'from': 'from_deadline', 'to': 'to_deadline', 'order': 'order', 'limit': 'limit'}
-    params = {}
+    params = {'from_deadline': dt.now().strftime('%Y%m%d')}
     errors = []
     if len(args) <= 2:
         errors.append({'name': "引数エラー", 'value': '引数が少なすぎます'})
