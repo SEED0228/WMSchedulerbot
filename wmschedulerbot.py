@@ -18,8 +18,8 @@ def split_command(content):
 def check_validation(params, errors):
     return errors
 
-def create_link(params):
-    link = 'https://waseda-moodle-scheduler.herokuapp.com/api/v1/events?'
+def create_link(name, params):
+    link = f'https://waseda-moodle-scheduler.herokuapp.com/api/v1/{name}?'
     for key in params:
         link += f"{key}={params[key]}&"
     return link[:-1]
@@ -65,7 +65,7 @@ async def show(ctx, args):
             embed.add_field(name=err['name'], value=err['value'], inline=False)
         await ctx.channel.send(embed=embed)
     else:
-        await show_event_information(ctx, create_link(params), params)
+        await show_event_information(ctx, create_link('events', params), params)
 
             
 # コマンド処理
