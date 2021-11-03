@@ -1,0 +1,6 @@
+{
+  "name": "WMSchedulerBot",
+  "description": "早稲田moodleの課題管理ができます",
+  "repository": "https://github.com/SEED0228/WMSchedulerBot",
+  "keywords": ["python", "discord", "bot"]
+}
