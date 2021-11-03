@@ -208,7 +208,6 @@ async def on_message(ctx):
     # /wsmであれば実行
     if args[0] == "/wms":
         await exec_command(ctx, args)
-    # await ctx.channel.send(ctx.author.name)
 
 
 # 実行
