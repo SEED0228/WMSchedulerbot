@@ -8,16 +8,16 @@ from os import getenv
 client = discord.Client()
 
 # 文字列を空白区切りでリスト化
-async def split_command(content):
+def split_command(content):
     args = content.replace('　', ' ').split(' ')
     while '' in args:
         args.remove('')
     return args
 
-async def check_validation(params, errors):
+def check_validation(params, errors):
     return errors
 
-async def create_link(params):
+def create_link(params):
     link = 'https://waseda-moodle-scheduler.herokuapp.com/api/v1/events?'
     for key in params:
         link += f"{key}={params[key]}&"
@@ -54,7 +54,7 @@ async def show(ctx, args):
                 errors.append({'name': "引数エラー", 'value': '属性名が不正です'})
         else:
             errors.append({'name': "引数エラー", 'value': '=が多すぎます'})
-    errors = await check_validation(params, errors)
+    errors = check_validation(params, errors)
     if errors:
         embed = discord.Embed(title='hoge', description='fuga', color=0xff0000)
         embed.title = "ERROR"
@@ -64,7 +64,7 @@ async def show(ctx, args):
             embed.add_field(name=err['name'], value=err['value'], inline=False)
         await ctx.channel.send(embed=embed)
     else:
-        await show_event_information(ctx, await create_link(params), params)
+        await show_event_information(ctx, create_link(params), params)
 
             
 # コマンド処理
@@ -83,7 +83,7 @@ async def on_message(ctx):
     if ctx.author.bot:
         return
     # 文字列を空白区切りでリスト化
-    args = await split_command(ctx.content)
+    args = split_command(ctx.content)
     # /wsmであれば実行
     if args[0] == '/wms':
         await exec_command(ctx, args)
