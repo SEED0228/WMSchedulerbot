@@ -61,6 +61,11 @@ async def show_progress_information(ctx, params):
         1: "doing",
         2: "done",
     }
+    status_emoji = {
+        0: ":green_square:",
+        1: ":arrows_counterclockwise:",
+        2: ":white_check_mark:",
+    }
     str = ""
     for key in params:
         str += (
@@ -75,7 +80,7 @@ async def show_progress_information(ctx, params):
         )
         for progress in data:
             embed.add_field(
-                name=f"{status[progress['status']]}:{progress['event']['title']}",
+                name=f"{status_emoji[progress['status']]}:{progress['event']['title']}",
                 value=f"{progress['event']['uid'][:-20]}, {progress['event']['subject']}, {progress['event']['begin_at']}",
                 inline=False,
             )
@@ -153,8 +158,6 @@ async def check(ctx, args):
         "username": usernames[ctx.author.name],
     }
     errors = []
-    if len(args) <= 2:
-        errors.append({"name": "引数エラー", "value": "引数が少なすぎます"})
     for arg in args[2:]:
         attrs = arg.split("=")
         if len(attrs) == 1:
