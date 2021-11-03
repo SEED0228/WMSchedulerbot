@@ -9,11 +9,11 @@
 .envにDISCORD_BOT_TOKEN,BASIC_AUTHORIZATIONを記述する。
 
 ```
-pipenv shell
+pipenv install
 ```
 
 ```
-python wmschedulerbot.py
+pipenv run python wmschedulerbot.py
 ```
 
 ## HackMD
