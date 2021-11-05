@@ -28,7 +28,7 @@ def create_link(name, params):
 
 
 async def show_event_information(ctx, params):
-    link = create_link("events", params)
+    link = create_link("events/", params)
     r = requests.get(
         link, headers={"Authorization": f"Basic {getenv('BASIC_AUTHORIZATION')}"}
     )
@@ -52,7 +52,7 @@ async def show_event_information(ctx, params):
 
 
 async def show_progress_information(ctx, params):
-    link = create_link("events/progresses", params)
+    link = create_link("events/progresses/", params)
     r = requests.get(
         link, headers={"Authorization": f"Basic {getenv('BASIC_AUTHORIZATION')}"}
     )
