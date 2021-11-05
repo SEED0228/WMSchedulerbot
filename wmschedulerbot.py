@@ -1,12 +1,12 @@
 import discord
-import requests
 import json
-from dotenv import load_dotenv
 from os import getenv
 from datetime import datetime as dt
 
+from infrastructure.apiclient import apiClient
+
 # オブジェクトを取得
-client = discord.Client()
+discordClient = discord.Client()
 
 # 文字列を空白区切りでリスト化
 def split_command(content):
@@ -20,18 +20,8 @@ def check_validation(params, errors):
     return errors
 
 
-def create_link(name, params):
-    link = f"https://waseda-moodle-scheduler.herokuapp.com/api/v1/{name}?"
-    for key in params:
-        link += f"{key}={params[key]}&"
-    return link[:-1]
-
-
-async def show_event_information(ctx, params):
-    link = create_link("events/", params)
-    r = requests.get(
-        link, headers={"Authorization": f"Basic {getenv('BASIC_AUTHORIZATION')}"}
-    )
+async def show_event_information(ctx, params: dict):
+    r = apiClient.fetch_events(params)
     str = ""
     for key in params:
         str += f"{key}: {params[key]},"
@@ -52,10 +42,7 @@ async def show_event_information(ctx, params):
 
 
 async def show_progress_information(ctx, params):
-    link = create_link("events/progresses/", params)
-    r = requests.get(
-        link, headers={"Authorization": f"Basic {getenv('BASIC_AUTHORIZATION')}"}
-    )
+    r = apiClient.fetch_event_progresses(params)
     status = {
         0: "todo",
         1: "doing",
@@ -195,13 +182,13 @@ async def exec_command(ctx, args):
         await check(ctx, args)
 
 
-@client.event
+@discordClient.event
 async def on_ready():
     # サーバー起動時に実行
     print("サーバーを起動します。")
 
 
-@client.event
+@discordClient.event
 async def on_message(ctx):
     # Botのメッセージは除外
     if ctx.author.bot:
@@ -214,4 +201,8 @@ async def on_message(ctx):
 
 
 # 実行
-client.run(getenv("DISCORD_BOT_TOKEN"))
+def main():
+    discordClient.run(getenv("DISCORD_BOT_TOKEN"))
+
+if __name__ == "__main__":
+    main()
