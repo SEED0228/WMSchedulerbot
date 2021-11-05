@@ -24,39 +24,33 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "[%(levelname)s] %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         },
         "simple": {
             "format": "%(asctime)s %(name)s:%(lineno)s %(funcName)s [%(levelname)s]: %(message)s"
-        }
+        },
     },
-
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
             "level": "INFO",
             "formatter": "simple",
-            "stream": "ext://sys.stdout"
+            "stream": "ext://sys.stdout",
         },
         "file": {
             "class": "logging.FileHandler",
             "level": "INFO",
             "formatter": "simple",
-            "filename": "log/wmschedulerbot.log"
-        }
+            "filename": "log/wmschedulerbot.log",
+        },
     },
-
     "loggers": {
         "__main__": {
             "level": "DEBUG",
             "handlers": ["console", "file"],
-            "propagate": False
+            "propagate": False,
         },
-        "": {
-            "level": "DEBUG",
-            "handlers": ["console", "file"],
-            "propagate": False
-        }
+        "": {"level": "DEBUG", "handlers": ["console", "file"], "propagate": False},
     },
 }
 config.dictConfig(LOGGING)

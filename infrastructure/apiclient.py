@@ -7,6 +7,7 @@ from config.config import WMS_API_BASE_URL, WMS_API_BASIC_AUTHORIZATION
 
 logger = logging.getLogger(__name__)
 
+
 class ApiClient:
     def __init__(self, prefix_url: str, basic_headers: dict):
         self.prefix_url = prefix_url
@@ -53,7 +54,5 @@ class ApiClient:
 
 apiClient = ApiClient(
     prefix_url=WMS_API_BASE_URL,
-    basic_headers={
-        "Authorization": f"Basic {WMS_API_BASIC_AUTHORIZATION}"
-    }
+    basic_headers={"Authorization": f"Basic {WMS_API_BASIC_AUTHORIZATION}"},
 )

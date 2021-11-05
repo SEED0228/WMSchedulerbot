@@ -204,5 +204,6 @@ async def on_message(ctx):
 def main():
     discordClient.run(getenv("DISCORD_BOT_TOKEN"))
 
+
 if __name__ == "__main__":
     main()
