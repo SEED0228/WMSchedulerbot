@@ -15,7 +15,7 @@ LOG_FILE_PATH = os.path.join(LOG_DIR, "wmschedulerbot.log")
 if not os.path.isdir(LOG_DIR):
     os.mkdir(os.path.join(BASE_DIR, "log"))
     if not os.path.isfile(LOG_FILE_PATH):
-        logfile = pathlib.Path(os.path.join(BASE_DIR, "log", "wmschedulerbot.log"))
+        logfile = pathlib.Path(LOG_FILE_PATH)
         logfile.touch()
 
 LOGGING = {
