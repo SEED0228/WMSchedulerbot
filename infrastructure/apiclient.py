@@ -1,3 +1,4 @@
+import json
 import logging
 import requests
 from urllib.parse import urlencode
@@ -9,16 +10,18 @@ logger = logging.getLogger(__name__)
 
 
 class ApiClient:
-    def __init__(self, prefix_url: str, basic_headers: dict):
+    def __init__(self, prefix_url: str, auth_header: dict):
         self.prefix_url = prefix_url
-        self.basic_headers = basic_headers
+        self.auth_header = auth_header
 
-    def _create_url(self, endpoint: str, query: dict) -> str:
-        params = urlencode(query)
-        return self.prefix_url + endpoint + "?" + params
+    def _create_url(self, endpoint: str, query: dict = None) -> str:
+        if query:
+            params = urlencode(query)
+            return self.prefix_url + endpoint + "?" + params
+        return self.prefix_url + endpoint
 
     def _create_headers(self, extra: dict = None) -> dict:
-        headers = deepcopy(self.basic_headers)
+        headers = deepcopy(self.auth_header)
         if extra:
             headers.update(extra)
         return headers
@@ -38,9 +41,11 @@ class ApiClient:
         return response
 
     def create_and_update_event_progresses(self, query: dict) -> requests.Response:
-        url = self._create_url("api/v1/events/progresses/", query)
-        headers = self._create_headers()
-        response = requests.post(url=url, headers=headers)
+        url = self._create_url("api/v1/events/progresses/")
+        headers = self._create_headers({
+            "Content-Type": "application/json",
+        })
+        response = requests.post(url=url, headers=headers, data=json.dumps(query))
         logger.info(response.text)
         return response
 
@@ -54,5 +59,5 @@ class ApiClient:
 
 apiClient = ApiClient(
     prefix_url=WMS_API_BASE_URL,
-    basic_headers={"Authorization": f"Basic {WMS_API_BASIC_AUTHORIZATION}"},
+    auth_header={"Authorization": f"Basic {WMS_API_BASIC_AUTHORIZATION}"},
 )
