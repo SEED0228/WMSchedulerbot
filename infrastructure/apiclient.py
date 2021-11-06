@@ -42,9 +42,11 @@ class ApiClient:
 
     def create_and_update_event_progresses(self, query: dict) -> requests.Response:
         url = self._create_url("api/v1/events/progresses/")
-        headers = self._create_headers({
-            "Content-Type": "application/json",
-        })
+        headers = self._create_headers(
+            {
+                "Content-Type": "application/json",
+            }
+        )
         response = requests.post(url=url, headers=headers, data=json.dumps(query))
         logger.info(response.text)
         return response
