@@ -174,12 +174,57 @@ async def check(ctx, args):
         await show_progress_information(ctx, params)
 
 
+async def add(ctx, args):
+    status = {
+        "todo": "0",
+        "doing": "1",
+        "done": "2",
+        "0": "0",
+        "1": "1",
+        "2": "2",
+    }
+    status_str = {
+        "0": "todo",
+        "1": "doing",
+        "2": "done",
+    }
+    usernames = {
+        "SEED": "seed",
+        "I.TK": "itk",
+        "Liberal": "liberal",
+    }
+    if args[3] in status:
+        params = {
+            "uid": args[2] + "@wsdmoodle.waseda.jp",
+            "username": usernames[ctx.author.name],
+            "status": status[args[3]],
+        }
+        r = apiClient.create_and_update_event_progresses(params)
+        if r.status_code == 201:
+            embed = discord.Embed(
+                title=f"登録成功({params['username']})",
+                description=f"{params['uid'][:-20]} {status_str[params['status']]}",
+                color=0x00FF00,
+            )
+        else:
+            embed = discord.Embed(title="ERROR", description="", color=0xFF0000)
+            data = json.loads(r.text)
+            for atr in data:
+                for err in data[atr]:
+                    embed.add_field(name=atr, value=err, inline=False)
+    else:
+        embed = discord.Embed(title="引数エラー", description="ステータス名が不正です", color=0xFF0000)
+    await ctx.channel.send(embed=embed)
+
+
 # コマンド処理
 async def exec_command(ctx, args):
     if args[1] == "show":
         await show(ctx, args)
     elif args[1] == "check":
         await check(ctx, args)
+    elif args[1] == "add" or args[1] == "update":
+        await add(ctx, args)
 
 
 @discordClient.event
