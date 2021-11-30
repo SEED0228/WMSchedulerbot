@@ -13,7 +13,7 @@ pipenv install
 ```
 
 ```
-pipenv run python wmschedulerbot.py
+pipenv run start
 ```
 
 ## 使い方(HackMD)
