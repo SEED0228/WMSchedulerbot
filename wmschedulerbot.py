@@ -217,6 +217,32 @@ async def add(ctx, args):
     await ctx.channel.send(embed=embed)
 
 
+async def remove(ctx, args):
+    usernames = {
+        "SEED": "seed",
+        "I.TK": "itk",
+        "Liberal": "liberal",
+    }
+    params = {
+        "uid": args[2] + "@wsdmoodle.waseda.jp",
+        "username": usernames[ctx.author.name],
+    }
+    r = apiClient.delete_event_progresses(params)
+    if r.status_code == 200:
+        embed = discord.Embed(
+            title=f"削除成功({params['username']})",
+            description=f"{params['uid'][:-20]}",
+            color=0x00ffff,
+        )
+    else:
+        embed = discord.Embed(title="ERROR", description="", color=0xFF0000)
+        data = json.loads(r.text)
+        for atr in data:
+            for err in data[atr]:
+                embed.add_field(name=atr, value=err, inline=False)
+    await ctx.channel.send(embed=embed)
+
+
 # コマンド処理
 async def exec_command(ctx, args):
     if args[1] == "show":
@@ -225,6 +251,8 @@ async def exec_command(ctx, args):
         await check(ctx, args)
     elif args[1] == "add" or args[1] == "update":
         await add(ctx, args)
+    elif args[1] == "rm":
+        await remove(ctx, args)
 
 
 @discordClient.event
