@@ -16,6 +16,16 @@ pipenv install
 pipenv run start
 ```
 
+## Format手順
+
+```
+pipenv install --dev
+```
+
+```
+pipenv run format
+```
+
 ## 使い方(HackMD)
 
 [リンク](https://hackmd.io/e2JkQ6oGQLay8PpBXHDaaw)
