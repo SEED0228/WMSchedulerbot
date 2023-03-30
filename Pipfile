@@ -9,7 +9,7 @@ requests = "*"
 asyncio = "*"
 
 [dev-packages]
-black = "==20.8b1"
+black = "==23.3.0"
 watchdog = "*"
 pyyaml = "*"
 argh = "*"
